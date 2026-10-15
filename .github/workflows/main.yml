@@ -1,51 +1,17 @@
 name: Practice 1
 on: [push, workflow_dispatch]
+
 jobs:
-  checkout:
-    name: checkout
+  checks:
+    name: checks
     runs-on: ubuntu-latest
     steps:
-      - run: echo "checking out code"
       - uses: actions/checkout@v3
-  install_node:
-    name: install node
-    needs: checkout
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "installing node"
       - uses: actions/setup-node@v7
         with:
           node-version: '18.x'
-  install_app:
-    name: install app
-    needs: install_node
-    runs-on: ubuntu-latest
-    steps:
-      - run: echo "installing app"
+          cache: npm
       - run: npm ci
-  lint:
-    name: lint check
-    runs-on: ubuntu-latest
-    needs: install_app
-    steps:
-        - run: echo "running Lint"
-        - run: npm run lint
-  build:
-    name: build check
-    runs-on: ubuntu-latest
-    needs: test
-    steps:
-        - run: echo "running Build"
-        - run: npm run build
-  test:
-    name: test check
-    runs-on: ubuntu-latest
-    needs: install_app
-    steps:
-        - run: echo "running Test"
-        - run: npm run test
-    
-    
-
-    
-     
+      - run: npm run lint
+      - run: npm run test
+      - run: npm run build
